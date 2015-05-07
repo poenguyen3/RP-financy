@@ -4,6 +4,9 @@ var gulp = require('gulp'),
     changed = require('gulp-changed'),
     sass = require('gulp-sass'),
     csso = require('gulp-csso'),
+    cssConcat = require('gulp-concat-css'),
+    cssmin = require('gulp-cssmin'),
+    rename = require('gulp-rename'),
     autoprefixer = require('gulp-autoprefixer'),
     browserify = require('browserify'),
     watchify = require('watchify'),
@@ -19,6 +22,8 @@ var gulp = require('gulp'),
     p = {
       jsx: './scripts/app.jsx',
       scss: 'styles/main.scss',
+      cssLibs: 'styles/libs/*.css',
+      styleDistLib: 'dist/css',
       bundle: 'app.js',
       distJs: 'dist/js',
       distCss: 'dist/css'
@@ -65,7 +70,16 @@ gulp.task('browserify', function() {
     .pipe(gulp.dest(p.distJs));
 });
 
+gulp.task('styleLib', function(){
+  return gulp.src(p.cssLibs)
+      .pipe(cssConcat('libs.css'))
+      .pipe(cssmin())
+      .pipe(rename({suffix: '.min'}))
+      .pipe(gulp.dest(p.styleDistLib));
+});
+
 gulp.task('styles', function() {
+  gulp.start(['styleLib'])
   return gulp.src(p.scss)
     .pipe(changed(p.distCss))
     .pipe(sass({errLogToConsole: true}))

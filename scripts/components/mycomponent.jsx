@@ -7,7 +7,7 @@ let Mycomponent = React.createClass({
         deps;
 
     deps = Object.keys(pack.devDependencies).map((dep, i) => <li key={i}>{dep}</li>);
-
+    console.log(pack);
     return (
       <div>
         <h1 className="Mycomponent">Welcome to &#9883; React Starterify {version}</h1>
